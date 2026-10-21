@@ -10,6 +10,14 @@ import stageImage from '@/assets/event-stage.jpg';
 import nonvegImage from '@/assets/nonveg-feast.jpg';
 import birthdayImage from '@/assets/birthday-party.jpg';
 import ssLogo from '@/assets/logo-ss.png';
+import menuStarters from '@/assets/menu/starters.jpeg';
+import menuSnacks from '@/assets/menu/snacks.jpeg';
+import menuVegCurries from '@/assets/menu/vegetarian-curries.jpeg';
+import menuRiceBiryani from '@/assets/menu/rice-and-biryani.jpeg';
+import menuTiffins from '@/assets/menu/tiffins-and-chutneys.jpeg';
+import menuNonVegCurries from '@/assets/menu/non-veg-curries.jpeg';
+import menuNonVegBiryani from '@/assets/menu/non-veg-biryani.jpeg';
+import menuIceCream from '@/assets/menu/ice-cream.jpeg';
 
 const PHONE_ONE = '+918877884459';
 const PHONE_TWO = '+917674898788';
@@ -46,15 +54,31 @@ const gallery = [
 
 const galleryFilters = ['All', 'Vegetarian Food', 'Non-Vegetarian Food', 'Buffet Setup', 'Wedding Events', 'Birthday Parties', 'Stage Decorations'];
 
+const menus = [
+  { title: 'Starters', kind: 'Starters', image: menuStarters, alt: 'SS Catering menu poster listing vegetarian starters such as gobi 65, paneer 65 and crispy corn' },
+  { title: 'Snacks', kind: 'Snacks', image: menuSnacks, alt: 'SS Catering menu poster listing snacks including samosas, rolls, fries and chaat' },
+  { title: 'Vegetarian Curries', kind: 'Vegetarian', image: menuVegCurries, alt: 'SS Catering menu poster listing vegetarian curries including paneer, mushroom and traditional Andhra curries' },
+  { title: 'Rice, Biryani & Fried Rice', kind: 'Vegetarian', image: menuRiceBiryani, alt: 'SS Catering menu poster listing flavoured rice, vegetarian biryanis and fried rice' },
+  { title: 'Tiffins & Chutneys', kind: 'Breakfast', image: menuTiffins, alt: 'SS Catering menu poster listing tiffins and chutneys' },
+  { title: 'Non-Vegetarian Curries', kind: 'Non-Vegetarian', image: menuNonVegCurries, alt: 'SS Catering menu poster listing chicken, mutton, fish and prawn curries' },
+  { title: 'Non-Veg Biryani', kind: 'Non-Vegetarian', image: menuNonVegBiryani, alt: 'SS Catering menu poster listing egg, chicken, mutton and prawn biryani and pulao' },
+  { title: 'Ice Creams', kind: 'Desserts', image: menuIceCream, alt: 'SS Catering menu poster listing ice cream and kulfi flavours' },
+];
+
+const menuFilters = ['All Menus', 'Vegetarian', 'Non-Vegetarian', 'Starters', 'Snacks', 'Breakfast', 'Desserts'];
+
 const navItems = [
-  ['Our story', '#about'], ['Services', '#services'], ['Gallery', '#gallery'], ['Contact', '#contact'],
+  ['Our story', '#about'], ['Services', '#services'], ['Menu', '#menu'], ['Gallery', '#gallery'], ['Contact', '#contact'],
 ];
 
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeMenuFilter, setActiveMenuFilter] = useState('All Menus');
+  const [menuLightboxIndex, setMenuLightboxIndex] = useState<number | null>(null);
   const visibleGallery = useMemo(() => activeFilter === 'All' ? gallery : gallery.filter((item) => item.kind === activeFilter), [activeFilter]);
+  const visibleMenus = useMemo(() => activeMenuFilter === 'All Menus' ? menus : menus.filter((item) => item.kind === activeMenuFilter), [activeMenuFilter]);
 
   useEffect(() => {
     document.title = 'Catering Services & Event Management | Visakhapatnam';
@@ -90,6 +114,18 @@ function App() {
     document.body.style.overflow = 'hidden';
     return () => { window.removeEventListener('keydown', onKeyDown); document.body.style.overflow = ''; };
   }, [lightboxIndex, visibleGallery.length]);
+
+  useEffect(() => {
+    if (menuLightboxIndex === null) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuLightboxIndex(null);
+      if (event.key === 'ArrowRight') setMenuLightboxIndex((index) => index === null ? 0 : (index + 1) % visibleMenus.length);
+      if (event.key === 'ArrowLeft') setMenuLightboxIndex((index) => index === null ? 0 : (index - 1 + visibleMenus.length) % visibleMenus.length);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', onKeyDown); document.body.style.overflow = ''; };
+  }, [menuLightboxIndex, visibleMenus.length]);
 
   const moveToForm = () => {
     setMobileOpen(false);
@@ -153,7 +189,7 @@ function App() {
           <h2>Every occasion<br />deserves <em>a good table.</em></h2>
           <p className="story-lead">Some of life’s best moments happen around a meal. We help Visakhapatnam families and organisations bring people together with thoughtful food and event arrangements.</p>
           <p>From choosing a vegetarian, non-vegetarian or mixed menu to planning the practical details, we listen first and shape the day around what matters to you.</p>
-          <div className="owner-note"><span className="owner-initial">M</span><span><b>V. Maheshwara Rao</b><small> 함께 with P. Govind · Your local catering &amp; events team</small></span></div>
+          <div className="owner-note"><span className="owner-initial">M</span><span><b>V. Maheshwara Rao</b><small> with P. Govind · Your local catering &amp; events team</small></span></div>
           <a href="#services" className="text-link" data-testid="link-story-services">Get to know what we do <ArrowRight size={16} /></a>
         </div>
       </section>
@@ -172,6 +208,30 @@ function App() {
               <a className="service-link" href={serviceWhatsApp(service.title)} target="_blank" rel="noreferrer" data-testid={`link-enquire-service-${index + 1}`}>Ask about {service.title} <ArrowUpRight size={15} /></a>
             </article>;
           })}
+        </div>
+      </section>
+
+      <section className="menu-section section-pad" id="menu" aria-labelledby="menu-title">
+        <div className="menu-heading">
+          <div>
+            <p className="eyebrow"><span /> Fresh from our kitchen</p>
+            <h2 id="menu-title">Explore the <em>menu.</em></h2>
+          </div>
+          <p>Browse our catering selections by category. Choose a menu to see the complete poster, then contact us to plan your spread.</p>
+        </div>
+        <div className="menu-controls" role="group" aria-label="Filter menus">
+          {menuFilters.map((filter) => <button type="button" key={filter} className={activeMenuFilter === filter ? 'menu-filter-chip active' : 'menu-filter-chip'} aria-pressed={activeMenuFilter === filter} onClick={() => { setActiveMenuFilter(filter); setMenuLightboxIndex(null); }} data-testid={`button-menu-filter-${filter.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}>{filter}</button>)}
+          <span className="menu-count">{visibleMenus.length} menus</span>
+        </div>
+        <div className="menu-grid">
+          {visibleMenus.map((item, index) => <button type="button" className="menu-card" key={item.title} onClick={() => setMenuLightboxIndex(index)} aria-label={`View full ${item.title} menu`} data-testid={`button-menu-poster-${index + 1}`}>
+            <img src={item.image} alt={item.alt} loading="lazy" />
+            <span className="menu-card-info"><span><b>{item.title}</b><small>{item.kind} menu</small></span><span className="menu-card-open"><ArrowUpRight size={17} /></span></span>
+          </button>)}
+        </div>
+        <div className="menu-contact">
+          <p>Planning a gathering? We can help you combine dishes and tailor a menu for your occasion.</p>
+          <a className="button button-gold" href={`https://wa.me/${PHONE_ONE.replace('+', '')}?text=${encodeURIComponent('Hello, I would like to ask about your catering menu for my event. Please share details.')}`} target="_blank" rel="noreferrer" data-testid="link-menu-whatsapp">Ask about the menu <ArrowUpRight size={15} /></a>
         </div>
       </section>
 
@@ -259,6 +319,14 @@ function App() {
         </div>
         <span className="footer-copy">© {new Date().getFullYear()} Catering Services &amp; Event Management · {BUSINESS_HOURS_LABEL}</span>
       </footer>
+
+      {menuLightboxIndex !== null && visibleMenus[menuLightboxIndex] && <div className="lightbox menu-lightbox" role="dialog" aria-modal="true" aria-label="Menu poster viewer" onClick={() => setMenuLightboxIndex(null)} data-testid="dialog-menu-lightbox">
+        <button type="button" className="lightbox-close" onClick={() => setMenuLightboxIndex(null)} aria-label="Close menu viewer" data-testid="button-menu-lightbox-close"><X /></button>
+        <button type="button" className="lightbox-arrow lightbox-prev" onClick={(event) => { event.stopPropagation(); setMenuLightboxIndex((menuLightboxIndex - 1 + visibleMenus.length) % visibleMenus.length); }} aria-label="Previous menu" data-testid="button-menu-lightbox-previous"><ArrowLeft /></button>
+        <figure onClick={(event) => event.stopPropagation()}><img src={visibleMenus[menuLightboxIndex].image} alt={visibleMenus[menuLightboxIndex].alt} /><figcaption><span>{visibleMenus[menuLightboxIndex].kind}</span>{visibleMenus[menuLightboxIndex].title}</figcaption></figure>
+        <button type="button" className="lightbox-arrow lightbox-next" onClick={(event) => { event.stopPropagation(); setMenuLightboxIndex((menuLightboxIndex + 1) % visibleMenus.length); }} aria-label="Next menu" data-testid="button-menu-lightbox-next"><ArrowRight /></button>
+        <span className="lightbox-counter" data-testid="text-menu-lightbox-counter">{String(menuLightboxIndex + 1).padStart(2, '0')} / {String(visibleMenus.length).padStart(2, '0')}</span>
+      </div>}
 
       {lightboxIndex !== null && visibleGallery[lightboxIndex] && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Gallery image viewer" onClick={() => setLightboxIndex(null)} data-testid="dialog-gallery-lightbox">
         <button type="button" className="lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="Close image viewer" data-testid="button-lightbox-close"><X /></button>

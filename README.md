@@ -5,7 +5,7 @@ Standalone React + Vite source for the Visakhapatnam catering website. This pack
 ## Run it in VS Code
 
 1. Extract the ZIP and open the `ss-catering-website` folder (the folder containing `package.json`) in VS Code.
-2. Install Node.js 22.12 or later.
+2. Install Node.js 22.12 or later (Node 20.19+ also works). Check with `node -v`. A `.nvmrc` is included for nvm users.
 3. Open **Terminal → New Terminal** in VS Code and run:
 
    ```bash
@@ -50,3 +50,9 @@ The workflow automatically sets the correct base path for both a project reposit
 ## Booking form note
 
 The website links to the existing Google Form. That form currently asks visitors to sign in, so public bookings will remain blocked until its owner changes the Google Forms response-access settings to allow anyone with the link to respond without signing in.
+
+## Troubleshooting
+
+- **`npm install` fails with `ENOTFOUND package-firewall.replit.internal`** – the old `package-lock.json` pointed at a private mirror. This version of the lockfile uses `https://registry.npmjs.org/`. If you still see the error, delete `node_modules` and run `npm install` again.
+- **`EBADENGINE` / Vite will not start** – upgrade Node.js to 22.12+ (or 20.19+).
+- **Menu images missing after deploy** – menu posters now live in `src/assets/menu/` and are imported in `src/App.tsx`, so Vite adds the correct GitHub Pages base path and a content hash to each file name. To change a poster, replace the file with the same name (or add a new import) and push to `main`. Check the **Actions** tab: if the build is red, the site was not updated.
